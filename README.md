@@ -57,4 +57,4 @@ BattleBoard
 
 ## Project Goals
 
-DoodleDuel is primarily a learning and experimentation project. The goal is to explore how a game-like interactive experience can be built using Blazor while keeping the UI componentized and the game logic relatively simple.
+DoodleDuel is primarily an experimentation project. The goal is to explore how a game-like interactive experience can be built using Blazor while keeping the UI componentized and the game logic relatively simple.
