@@ -1,0 +1,35 @@
+﻿<button class="button" style="width: clamp(50px, 12vw, 90px); height: clamp(35px, 4vw, 45px);"
+        @onclick="OnClick"
+        disabled="@(Status == Result.Pending)">
+
+    @switch (Status)
+    {
+        case Result.Pending:
+            <span class="spinner"></span>
+            <span>Saving...</span>
+            break;
+
+        case Result.Success:
+            <span>Saved</span>
+            break;
+
+        case Result.Failed:
+            <span>Retry</span>
+            break;
+
+        default:
+            <span>@Label</span>
+            break;
+    }
+</button>
+
+@code {
+    [Parameter]
+    public Result Status { get; set; }
+
+    [Parameter]
+    public string Label { get; set; } = "Save";
+
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+}

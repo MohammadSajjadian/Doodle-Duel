@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37314.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoodleDuel", "DoodleDuel.csproj", "{6F95C8F9-3C0D-4AA8-BE7D-F3E7BD2C800C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6F95C8F9-3C0D-4AA8-BE7D-F3E7BD2C800C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F95C8F9-3C0D-4AA8-BE7D-F3E7BD2C800C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F95C8F9-3C0D-4AA8-BE7D-F3E7BD2C800C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F95C8F9-3C0D-4AA8-BE7D-F3E7BD2C800C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {76BFBE38-3072-4D36-8DB7-C969C89CD03D}
+	EndGlobalSection
+EndGlobal

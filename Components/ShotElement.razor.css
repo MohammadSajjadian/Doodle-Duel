@@ -1,0 +1,42 @@
+﻿.shot {
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 20;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    box-sizing: border-box;
+}
+
+    .shot::before,
+    .shot::after {
+        content: "";
+        position: absolute;
+        background: currentColor;
+    }
+
+    .shot::before {
+        width: 2px;
+        height: 30px;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .shot::after {
+        width: 30px;
+        height: 2px;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+.shot-fired {
+    color: #222;
+}
+
+.shot-received {
+    color: #c0392b;
+}

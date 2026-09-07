@@ -1,0 +1,8 @@
+﻿<div class="turn-indicator @(IsPlayerTurn ? "player-turn" : "opponent-turn")">
+    @(IsPlayerTurn ? "Your Turn" : "Opponent's Turn")
+</div>
+
+@code {
+    [Parameter]
+    public bool IsPlayerTurn { get; set; }
+}

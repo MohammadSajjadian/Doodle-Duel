@@ -1,0 +1,122 @@
+﻿@page "/"
+@inject NavigationManager Nav
+@inject GameSettingsService SettingsService
+
+<PageTitle>Doodle Duel</PageTitle>
+
+<div class="menu">
+
+    <button class="button" @onclick="HandleNavigation">
+        PLAY
+    </button>
+
+    <button class="button" @onclick="OpenSettings">
+        SETTINGS
+    </button>
+
+</div>
+
+<Modal IsOpen="@showSettings">
+
+    <Content>
+        <EditForm EditContext="editContext">
+
+            <DataAnnotationsValidator />
+
+            <div class="setting">
+                <label>Units Count</label>
+
+                <InputNumber @bind-Value="gameSettingsModel.UnitCount" />
+
+                <ValidationMessage For="() => gameSettingsModel.UnitCount" />
+            </div>
+
+            <div class="setting">
+                <label>Background</label>
+
+                <div class="background-options">
+
+                    @foreach (var background in backgrounds)
+                    {
+                        <button type="button"
+                                class="background-option @(gameSettingsModel.Background == background.Image ? "selected" : "")"
+                                @onclick="() => SelectBackground(background.Image)">
+
+                            <img src="/img/backgrounds/@background.Image" alt="@background.Name" />
+
+                            <span>@background.Name</span>
+
+                        </button>
+                    }
+
+                </div>
+            </div>
+
+        </EditForm>
+    </Content>
+
+    <Footer>
+        <button class="button" style="width: 90px; height: 40px;"
+                @onclick="CloseSettings">
+            Cancel
+        </button>
+
+        <StatusButton Status="result" OnClick="SaveSettings" />
+    </Footer>
+
+</Modal>
+
+@code {
+    private GameSettings gameSettingsModel = new();
+    private EditContext editContext = default!;
+    private bool showSettings;
+    private Result result = Result.Neutral;
+    private readonly List<BackgroundOption> backgrounds =
+[
+    new("Default", "default-bg.jpg"),
+new("Desert", "desert-bg.png"),
+new("Forest", "jungle-bg.jpg"),
+new("Snow", "snow-bg.png"),
+new("City", "city-bg.png")
+];
+
+    protected override async Task OnInitializedAsync()
+    {
+        gameSettingsModel = await SettingsService.LoadAsync();
+        editContext = new(gameSettingsModel);
+    }
+
+    private void HandleNavigation()
+    {
+        Nav.NavigateTo("/play");
+    }
+
+    private void OpenSettings()
+    {
+        showSettings = true;
+    }
+
+    private void CloseSettings()
+    {
+        showSettings = false;
+    }
+
+    private void SelectBackground(string background)
+    {
+        gameSettingsModel.Background = background;
+    }
+
+    private async Task SaveSettings()
+    {
+        if (!editContext.Validate())
+            return;
+
+        result = Result.Pending;
+        var status = await SettingsService.SaveAsync(gameSettingsModel);
+        result = status;
+
+        showSettings = false;
+    }
+
+    private record BackgroundOption(string Name, string Image);
+}

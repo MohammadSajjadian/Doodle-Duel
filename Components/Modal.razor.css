@@ -1,0 +1,61 @@
+﻿.modal-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+}
+
+.modal {
+    width: min(90%, 420px);
+    background: #e8e1d2;
+    color: #222;
+    border: 3px solid #222;
+    border-radius: 10px;
+    box-shadow: 0 8px 0 #222;
+    animation: popcorn 0.45s ease-out;
+    transform-origin: center;
+}
+
+@keyframes popcorn {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    40% {
+        opacity: 1;
+        transform: scale(1.18);
+    }
+
+    60% {
+        transform: scale(0.9);
+    }
+
+    80% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.modal-header {
+    padding: 18px 20px;
+    border-bottom: 2px solid #222;
+}
+
+.modal-content {
+    padding: 20px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 15px 20px;
+    border-top: 2px solid #222;
+}

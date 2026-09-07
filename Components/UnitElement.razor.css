@@ -1,0 +1,47 @@
+﻿.unit {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.unit-hit {
+    opacity: 0.4;
+    filter: grayscale(1);
+}
+
+.score-popup {
+    position: absolute;
+    z-index: 30;
+    margin-left: 30px;
+    margin-top: -30px;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background: white;
+    color: green;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1;
+    white-space: nowrap;
+    pointer-events: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    animation: score-popup 0.5s ease-out forwards;
+}
+
+@keyframes score-popup {
+    0% {
+        opacity: 0;
+        transform: translateY(10px) scale(0.7);
+    }
+
+    20% {
+        opacity: 1;
+        transform: translateY(0) scale(1.1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-20px) scale(1);
+    }
+}

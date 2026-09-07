@@ -1,0 +1,33 @@
+﻿.turn-indicator {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    padding: 6px 14px;
+    border: 2px solid #222;
+    border-radius: 999px;
+    background: #e8e1d2;
+    color: #222;
+    font-size: clamp(13px, 1.8vw, 17px);
+    font-weight: bold;
+    white-space: nowrap;
+    box-shadow: 3px 3px 0 #222;
+    pointer-events: none;
+}
+
+    .turn-indicator.player-turn {
+        color: #2e7d32;
+    }
+
+    .turn-indicator.opponent-turn {
+        color: #c62828;
+    }
+
+@media (max-width: 600px) {
+    .turn-indicator {
+        top: 10px;
+        padding: 5px 10px;
+        box-shadow: 2px 2px 0 #222;
+    }
+}

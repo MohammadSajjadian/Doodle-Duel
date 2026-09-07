@@ -1,0 +1,159 @@
+﻿@page "/play"
+@inject UnitService UnitService
+@inject GameSettingsService SettingsService
+@inject NavigationManager Nav
+
+<PageTitle>Battle</PageTitle>
+
+@if (isLoaded)
+{
+    <div class="battle-board" style="--battle-background: url('img/backgrounds/@(gameSettings.Background)')">
+        <ScoreElement OpponentScore="@opponentScore" PlayerScore="@playerScore" />
+        <TurnIndicator IsPlayerTurn="currentTurn == Side.Player" />
+
+        <OpponentField OpponentUnits="opponentUnits"
+                       IsActive="@(!IsPlayerTurn())"
+                       OnShotFired="HandleShot"
+                       IncomingShot="PlayerShot"
+                       OnUnitHit="HandleUnitHit"
+                       OnGameOver="HandleGameOver"
+                       @ref="opponentField"/>
+
+        <PlayerField PlayerUnits="playerUnits"
+                     IsActive="@IsPlayerTurn()"
+                     OnShotFired="HandleShot"
+                     IncomingShot="OpponentShot"
+                     OnUnitHit="HandleUnitHit"
+                     OnGameOver="HandleGameOver"
+                     @ref="playerField"/>
+    </div>
+
+    <Modal IsOpen="isGameOver">
+
+        <Header>
+            <h2>@(winner == Side.Player ? "YOU WON!" : "YOUR OPPONENT WON!")</h2>
+        </Header>
+
+        <Content>
+            <div class="game-over-content">
+                <p>
+                    @(winner == Side.Player
+                    ? "You destroyed all enemy units!"
+                    : "All your units have been destroyed!")
+                </p>
+
+                <div class="final-score">
+                    <div>
+                        <span>YOU</span>
+                        <strong>@playerScore</strong>
+                    </div>
+
+                    <div>
+                        <span>OPPONENT</span>
+                        <strong>@opponentScore</strong>
+                    </div>
+                </div>
+            </div>
+        </Content>
+
+        <Footer>
+            <button class="button" @onclick="RestartGame">
+                PLAY AGAIN
+            </button>
+
+            <button class="button" @onclick="GoToMenu">
+                MENU
+            </button>
+        </Footer>
+
+    </Modal>
+}
+else
+{
+    <p>Loading...</p>
+}
+
+@code {
+    private List<Unit> playerUnits = [];
+    private List<Unit> opponentUnits = [];
+    private Shot PlayerShot = default!;
+    private Shot OpponentShot = default!;
+    private GameSettings gameSettings = new();
+    private PlayerField playerField = default!;
+    private OpponentField opponentField = default!;
+
+    private bool isLoaded;
+    private Side currentTurn = Side.Player;
+    private int playerScore = 0;
+    private int opponentScore = 0;
+    private bool isGameOver;
+    private Side? winner;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isLoaded = false;
+
+        gameSettings = await SettingsService.LoadAsync();
+        var units = UnitService.CreateUnits(gameSettings.UnitCount);
+
+        playerUnits = units.PlayerUnits;
+        opponentUnits = units.OpponentUnits;
+
+        isLoaded = true;
+    }
+
+    private void HandleShot(Shot shot)
+    {
+        if (shot.Shooter == Side.Player)
+        {
+            PlayerShot = shot;
+        }
+        else
+        {
+            OpponentShot = shot;
+        }
+
+        ChangeTurn();
+    }
+
+    private void HandleUnitHit((Side Shooter, int Score) hit)
+    {
+        if (hit.Shooter is Side.Player)
+            playerScore += hit.Score;
+        else
+            opponentScore += hit.Score;
+    }
+
+    private void HandleGameOver(Side winnerSide)
+    {
+        isGameOver = true;
+        winner = winnerSide;
+    }
+
+    private void RestartGame()
+    {
+        isGameOver = false;
+
+        playerScore = 0;
+        opponentScore = 0;
+        winner = null;
+        playerField.ResetField();
+        opponentField.ResetField();
+
+        var units = UnitService.CreateUnits(gameSettings.UnitCount);
+
+        playerUnits = units.PlayerUnits;
+        opponentUnits = units.OpponentUnits;
+
+        currentTurn = Side.Player;
+    }
+
+    private void GoToMenu()
+    {
+        Nav.NavigateTo("/");
+    }
+
+    private bool IsPlayerTurn() => currentTurn == Side.Player;
+
+    private void ChangeTurn() => currentTurn = IsPlayerTurn() ? Side.Opponent : Side.Player;
+}

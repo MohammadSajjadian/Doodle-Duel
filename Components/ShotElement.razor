@@ -1,0 +1,14 @@
+﻿<div class="shot @(IsFired() ? "shot-fired" : "shot-received")"
+     style="left:@($"{Shot.X}%"); top:@($"{Shot.Y}%")">
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public Shot Shot { get; set; }
+
+    [Parameter, EditorRequired]
+    public Side FieldSide { get; set; }
+
+    private bool IsFired()
+        => Shot.Shooter is Side.Player && FieldSide is Side.Player || Shot.Shooter is Side.Opponent && FieldSide is Side.Opponent;
+}

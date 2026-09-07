@@ -1,0 +1,50 @@
+﻿.score {
+    position: absolute;
+    top: 16px;
+    left: 70px;
+    right: 70px;
+    display: flex;
+    justify-content: space-between;
+    z-index: 100;
+    pointer-events: none;
+}
+
+.score-player,
+.score-opponent {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 10px;
+    border: 2px solid #222;
+    border-radius: 6px;
+    background: #e8e1d2;
+    color: #222;
+    box-shadow: 3px 3px 0 #222;
+}
+
+.score-label {
+    font-size: clamp(12px, 1.6vw, 15px);
+    font-weight: bold;
+}
+
+.score-value {
+    min-width: 30px;
+    font-size: clamp(16px, 2vw, 20px);
+    font-weight: bold;
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+    .score {
+        top: 10px;
+        left: 20px;
+        right: 20px;
+    }
+
+    .score-player,
+    .score-opponent {
+        gap: 5px;
+        padding: 4px 7px;
+        box-shadow: 2px 2px 0 #222;
+    }
+}

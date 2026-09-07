@@ -1,0 +1,28 @@
+﻿<img @ref="element"
+     class="unit @(Unit.IsHit ? "unit-hit" : "")"
+     src="@Unit.Image"
+     style="left:@($"{Unit.X}%"); top:@($"{Unit.Y}%");" />
+
+@if (Unit.IsHit)
+{
+    <div class="score-popup"
+         style="left:@($"{Unit.X}%"); top:@($"{Unit.Y}%");">
+        +@Unit.Score
+    </div>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public Unit Unit { get; set; } = null!;
+    [Parameter]
+    public EventCallback<ElementReference> OnElementReady { get; set; }
+
+    private ElementReference element;
+    private bool showScore;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            await OnElementReady.InvokeAsync(element);
+    }
+}

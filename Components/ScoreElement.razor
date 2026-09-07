@@ -1,0 +1,19 @@
+﻿<div class="score">
+    <div class="score-player">
+        <span class="score-label">YOU</span>
+        <span class="score-value">@PlayerScore</span>
+    </div>
+
+    <div class="score-opponent">
+        <span class="score-label">OPPONENT</span>
+        <span class="score-value">@OpponentScore</span>
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public int OpponentScore { get; set; }
+
+    [Parameter, EditorRequired]
+    public int PlayerScore { get; set; }
+}

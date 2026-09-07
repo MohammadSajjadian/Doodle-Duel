@@ -1,0 +1,134 @@
+﻿@inject IJSRuntime JS
+@implements IDisposable
+
+<div class="opponent-field @(!IsActive ? "cursor-disabled" : "")"
+     @onclick="HandleShot"
+     @ref="fieldElement">
+
+    @foreach (var unit in OpponentUnits)
+    {
+        <UnitElement Unit="unit" OnElementReady="element => unitElements[unit.Id] = element" @key="unit.Id" />
+    }
+
+    @foreach (var shot in shots)
+    {
+        <ShotElement Shot="shot" FieldSide="Side.Opponent" />
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public bool IsActive { get; set; }
+    [Parameter, EditorRequired]
+    public List<Unit> OpponentUnits { get; set; } = [];
+    [Parameter, EditorRequired]
+    public Shot? IncomingShot { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback<Shot> OnShotFired { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback<(Side Shooter, int Score)> OnUnitHit { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback<Side> OnGameOver { get; set; }
+
+    private Shot? lastIncomingShot;
+    private List<Shot> shots = [];
+    private ElementReference fieldElement;
+    private IJSInProcessObjectReference? module;
+    private FieldSize? fieldSize;
+    private Dictionary<Guid, ElementReference> unitElements = [];
+    private bool isGameOver;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (IncomingShot is null)
+            return;
+
+        if (ReferenceEquals(IncomingShot, lastIncomingShot))
+            return;
+
+        lastIncomingShot = IncomingShot;
+
+        var receivedShot = new Shot
+        {
+            Shooter = IncomingShot.Shooter,
+            X = IncomingShot.X,
+            Y = 100 - IncomingShot.Y
+        };
+
+        shots.Add(receivedShot);
+        await CheckHit(receivedShot);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var inProcessJs = (IJSInProcessRuntime)JS;
+            module = await inProcessJs.InvokeAsync<IJSInProcessObjectReference>("import", "./js/field.js");
+            fieldSize = await module!.InvokeAsync<FieldSize>("getElementRect", fieldElement);
+        }
+    }
+
+    private async Task HandleShot(MouseEventArgs e)
+    {
+        if (!IsActive || isGameOver)
+            return;
+
+        var shot = new Shot
+        {
+            Shooter = Side.Opponent,
+            X = CoordinateHelper.PixelToPercentage(e.OffsetX, fieldSize!.Width),
+            Y = CoordinateHelper.PixelToPercentage(e.OffsetY, fieldSize.Height)
+        };
+        shots.Add(shot);
+        await OnShotFired.InvokeAsync(shot);
+    }
+
+    private async Task CheckHit(Shot shot)
+    {
+        var fieldRect = await module!.InvokeAsync<FieldSize>("getElementRect", fieldElement);
+
+        var shotX = CoordinateHelper.PercentageToPixel(shot.X, fieldRect.Left, fieldRect.Width);
+        var shotY = CoordinateHelper.PercentageToPixel(shot.Y, fieldRect.Top, fieldRect.Height);
+
+        var nonHitedUnits = OpponentUnits.Where(u => !u.IsHit);
+        foreach (var unit in nonHitedUnits)
+        {
+            if (!unitElements.TryGetValue(unit.Id, out var element))
+                continue;
+
+            var isHit = await module!.InvokeAsync<bool>("isPointInsideElement", element, shotX, shotY);
+
+            if (!isHit)
+                continue;
+
+            unit.Hit();
+            await OnUnitHit.InvokeAsync((shot.Shooter, unit.Score));
+        }
+        await CheckGameEnd();
+    }
+
+    private async Task CheckGameEnd()
+    {
+        if (OpponentUnits.All(unit => unit.IsHit))
+        {
+            isGameOver = true;
+            await OnGameOver.InvokeAsync(Side.Player);
+        }
+    }
+
+    public void ResetField()
+    {
+        shots.Clear();
+        isGameOver = false;
+        StateHasChanged();
+    }
+
+    void IDisposable.Dispose()
+    {
+        if (module is not null)
+        {
+            module.Dispose();
+        }
+    }
+}

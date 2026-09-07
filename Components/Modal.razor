@@ -1,0 +1,42 @@
+﻿@if (IsOpen)
+{
+    <div class="modal-overlay">
+
+        <div class="modal">
+
+            @if (Header is not null)
+            {
+                <div class="modal-header">
+                    @Header
+                </div>
+            }
+
+            <div class="modal-content">
+                @Content
+            </div>
+
+            @if (Footer is not null)
+            {
+                <div class="modal-footer">
+                    @Footer
+                </div>
+            }
+
+        </div>
+
+    </div>
+}
+
+@code {
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public RenderFragment? Header { get; set; }
+
+    [Parameter, EditorRequired]
+    public RenderFragment Content { get; set; }
+
+    [Parameter]
+    public RenderFragment? Footer { get; set; }
+}

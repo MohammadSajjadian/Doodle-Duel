@@ -1,0 +1,65 @@
+﻿.battle-board {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background-image: var(--battle-background);
+    background-size: 100% 100vh;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.turn-indicator {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+    .turn-indicator.player-turn {
+        color: #2e7d32;
+    }
+
+    .turn-indicator.opponent-turn {
+        color: #c62828;
+    }
+
+.game-over-content {
+    text-align: center;
+}
+
+    .game-over-content p {
+        margin: 0 0 20px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+.final-score {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+    .final-score div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .final-score span {
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    .final-score strong {
+        font-size: 28px;
+    }
