@@ -4,9 +4,8 @@ A browser-based turn-based strategy game built with **Blazor WebAssembly**.
 
 DoodleDuel is a small game project focused on experimenting with interactive UI, component communication, coordinate systems, DOM-based collision detection, and browser-side state management.
 
-![DoodleDuel Gameplay]
-
-
+## Demo
+<p align="left"><img src="https://github.com/user-attachments/assets/d03b333b-39a9-4331-9a4a-f766138d3dd3" alt="DoodleDuel Gameplay" width="320"> </p>
 
 ## Features
 
